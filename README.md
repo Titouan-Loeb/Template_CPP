@@ -1,2 +1,2 @@
-# Template_C-
+# Template_C++
 New C++ project
