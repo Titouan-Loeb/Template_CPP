@@ -1,54 +1,50 @@
-# Compiler
+# Compiler and flags
 CXX := g++
-# Compiler flags
 CXXFLAGS := -std=c++11 -Wall -Wextra
-# Directories
 SRCDIR := src
 INCDIR := include
 BUILDDIR := build
 BINDIR := bin
-# Target binary name
-TARGET := $(BINDIR)/my_program
+TARGET := $(BINDIR)/myProgram
 
-# Get a list of all .cpp files in the src directory
-SRC := $(wildcard $(SRCDIR)/*.cpp)
-# Generate the object file names from the source file names
-OBJ := $(patsubst $(SRCDIR)/%.cpp,$(BUILDDIR)/%.o,$(SRC))
-# Set the include directories for the compiler
-CXXFLAGS += -I$(INCDIR)
+# Find all source files in the src directory and its subdirectories
+SOURCES := $(shell find $(SRCDIR) -type f -name "*.cpp")
+
+# Derive object file names from source file names and place them in the build directory
+OBJECTS := $(patsubst $(SRCDIR)/%,$(BUILDDIR)/%,$(SOURCES:.cpp=.o))
+
+# Include directories for header files (including subdirectories)
+INCLUDES := -I$(INCDIR) $(shell find $(INCDIR) -type d | sed 's/^/-I/')
 
 # Colors for terminal output
 GREEN := \033[1;32m
 CYAN := \033[1;36m
 RESET := \033[0m
 
-# The default target builds the executable
-all: $(TARGET)
+all: $(BINDIR) $(TARGET)
 
-# Rule to build the executable
-$(TARGET): $(OBJ)
+$(BINDIR):
 	@mkdir -p $(BINDIR)
+
+# Rule to build the target
+$(TARGET): $(OBJECTS)
 	@echo "$(CYAN)Linking$(RESET) $(GREEN)$@$(RESET)"
-	@$(CXX) $(CXXFLAGS) -o $@ $^
+	@$(CXX) $(CXXFLAGS) $(INCLUDES) $^ -o $@
 
-# Rule to build object files from source files
+# Rule to build object files
 $(BUILDDIR)/%.o: $(SRCDIR)/%.cpp
-	@mkdir -p $(BUILDDIR)
+	@mkdir -p $(@D)
 	@echo "$(CYAN)Compiling$(RESET) $(GREEN)$<$(RESET)"
-	@$(CXX) $(CXXFLAGS) -c -o $@ $<
+	@$(CXX) $(CXXFLAGS) $(INCLUDES) -c $< -o $@
 
-# Clean up the build files
 clean:
 	@echo "$(CYAN)Cleaning$(RESET) $(GREEN)build$(RESET) directory"
-	@rm -rf $(BUILDDIR)
+	@rm -rf $(BUILDDIR) $(OBJECTS)
 
-# Clean up all build files and the executable
 fclean: clean
 	@echo "$(CYAN)Cleaning$(RESET) $(GREEN)bin$(RESET) directory"
-	@rm -rf $(BINDIR)
+	@rm -rf $(TARGET) $(BINDIR)
 
-# Rebuild the project from scratch
 re: fclean all
 
-# .PHONY target to ensure the rules are always executed
-.PHONY: all clean fclean
+.PHONY: all clean fclean re
