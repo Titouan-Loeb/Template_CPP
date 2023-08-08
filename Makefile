@@ -22,7 +22,7 @@ BIN_DIR := bin
 TEST_DIR := test
 
 # Target executable names
-BIN_NAME := SortingCompetion
+BIN_NAME := [BINARY_NAME]
 TARGET := $(BIN_DIR)/$(BIN_NAME)
 TARGET_RELEASE := $(BIN_DIR)/$(BIN_NAME)-release
 TARGET_DEBUG := $(BIN_DIR)/$(BIN_NAME)-debug
@@ -56,7 +56,7 @@ RESET := \033[0m
 #######################
 
 # Default rule
-build: clean $(TARGET)
+build: $(TARGET)
 
 # Rule to build the target
 $(TARGET): $(OBJECTS)
