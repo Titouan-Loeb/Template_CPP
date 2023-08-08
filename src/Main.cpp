@@ -1,6 +1,8 @@
 int main(int argc, char** argv)
 {
-    (void)argc;
-    (void)argv;
+    if (argc == 2 && argv[1] == std::string("-h")) {
+        std::cout << "Usage: " << argv[0] << std::endl;
+        return (0);
+    }
     return (0);
 }
