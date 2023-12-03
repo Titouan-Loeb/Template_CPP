@@ -4,6 +4,7 @@ New C++ project
 ## Requirements
 
 To compile and execute this program you will need to have a cpp compiler (g++) and the command make installed as well. You might need to install valgrind as the rule "make run-debug" (explained in the running section) uses it. If you want to run the test you will need to have the criterion library installed.
+If you are using vscode you may also want to install gdb launch the program in debug mode
 
 ## Compiling
 
